@@ -13,6 +13,7 @@ je pense que ma place dans cette équipe sera en dans le design car c'est le dom
 
 <details>
 <summary>Mo'ad Bendjeddou</summary>
+  Durant mon stage j’ai été en charge de la gestion des incidents de sécurité, de la migration de systèmes informatiques ainsi que la réalisation d'enquêtes de sécurité.
 </details>
 
 
