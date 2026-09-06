@@ -44,5 +44,7 @@ Et je sais aussi faire de la musique aussi. Je vais peut-être voir si je peux m
 
 <details>
 <summary>Nicolas Chanez</summary>
-  Durant mon stage j’ai aidé à concevoir une application web sous angular avec front et back. J’ai également des compétences en gestion de base de données et en game design.
+  Durant mon stage j’ai aidé à concevoir une application web sous angular avec front et back. 
+  J’ai également des compétences en gestion de base de données et en interface utilisateurs.
+  Dans cette équipe je pense pouvoir apporter mes connaissances en game design et en création d'énigmes. Je pense aussi pouvoir participer au back et a l'API.
 </details>
