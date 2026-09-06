@@ -5,7 +5,9 @@ Projet de SAE du semestre 5. Escape Game.
 
 <details>
 <summary>Abel Chauwin</summary>
-j’ai pu lors de mon stage améliorer mais capacité de développement fullstack et de gestion de BD.
+j’ai pu lors de mon stage développer un site web en react native, ainsi que la base de donner qui va avec, 
+j'ai donc gagner beaucoup d'expérience en gestion de base de donner, ainsi qu'en front comme en back.
+je pense que ma place dans cette équipe sera en dans le design car c'est le domaine ou l'équipe a le plus de lacune, mais aussi dans le back et la bd a moindre échelle
 </details>
 
 
