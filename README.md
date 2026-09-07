@@ -41,7 +41,9 @@ Et je sais aussi faire de la musique aussi. Je vais peut-être voir si je peux m
 
 <details>
 <summary>Saul Boucherot</summary>
-  Stage sur microcontrôleur 
+  Durant mon stage j'ai principalement travaillé sur un microcontrôleur et sur une émulation de celui ci en web assembly et type script.
+  Je possède également des compétences en organisation de travail et en clean de code.
+  Je pense pouvoir être utile à l'équipe en tant que coordinateur des différentes tâches et sur l'implémentation du microcontrôleurs. Je peux également aider sur le back et le game design.
 </details>
 
 <details>
