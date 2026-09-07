@@ -55,4 +55,4 @@ Et je sais aussi faire de la musique. Je vais peut-être voir si je peux me form
 
 # Equipe
 
-Notre equipe possede une grande variété de competance utile a la SAE et de plus nous avons deja travaillé ensemble une fois, rendant plus simple la comunication et la collaboration. Nous pensons donc que cette equipe est adapté a la SAE
+Notre équipe possède une grande variété de compétences utiles à la SAE, et de plus, nous avons déjà travaillé ensemble une fois, ce qui rend plus simple la communication et la collaboration. Nous pensons donc que cette équipe est adaptée à la SAE.
