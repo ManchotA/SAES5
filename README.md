@@ -52,3 +52,7 @@ Et je sais aussi faire de la musique. Je vais peut-être voir si je peux me form
   J’ai également des compétences en gestion de base de données et en interface utilisateurs.
   Dans cette équipe je pense pouvoir apporter mes connaissances en game design et en création d'énigmes. Je pense aussi pouvoir participer au back et à l'API.
 </details>
+
+# Equipe
+
+Notre equipe possede une grande variété de competance utile a la SAE et de plus nous avons deja travaillé ensemble une fois, rendant plus simple la comunication et la collaboration. Nous pensons donc que cette equipe est adapté a la SAE
