@@ -4,7 +4,7 @@
 | Information | Détails |
 | :--- | :--- |
 | **301-302 / Snow** | [Romann Greco, Saul Boucherot, Nicolas Chanez, Abel Chauwin, Mo'ad Bendjeddou] |
-| **1.0 Draft initial** |
+| **1.0**| Draft initial |
 | **01-10-2026** |
 
 ---
@@ -155,9 +155,6 @@ Mi-février : produit fini + exposition
 
 | Risque identifié | Impact (H/M/L) | Stratégie d'atténuation |
 | :--- | :--- | :--- |
-| *ex: Instabilité du hardware* | *H* | *Prévoir un mode "Software-only" de secours.* |
-| *ex: Complexité du scénario* | *M* | *Simplifier les énigmes si le développement prend du retard.* |
-
 | Instabilité du hardware | H | prévoir un mode "Software-only" de secours. |
 | Manque d'inspiration pour les énigmes | L | mettre des étages avec seulement 2 salles |
 | Se rendre compte qu'on part dans la mauvaise direction | L | essayer de partir de quelque chose de plus large |
