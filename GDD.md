@@ -1,4 +1,4 @@
-# 🧩 GDD-TEMPLATE : [Nom du Projet]
+# 🧩 GDD-TEMPLATE : [Le Complexe]
 **Document de Conception de Jeu (Game Design Document)**
 
 | Information | Détails |
