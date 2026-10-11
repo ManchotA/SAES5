@@ -1,3 +1,5 @@
+## Semaine du 5/10 au 11/10
+
 Pour le projet, j'ai vivement encouragé de faire le jeu sous une vue simple 2d de profil au lieu de faire une vue isométrique. Je pars du principe qu'on part sur des bases simples afin d'avoir un livrable qualitatif.
 On a surtout discuté du layout, donc comment on dispose les salles dans le jeu, dans quel ordre on doit faire les salles... 
 
