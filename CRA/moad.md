@@ -10,3 +10,4 @@ Concertation en vocal discord sur certains choix de développement du jeu tel qu
     des implémentation d'ambiances 
     des modes de jeu
     la manière de représenter les salles
+    choix du language de programmation,  python et angular
