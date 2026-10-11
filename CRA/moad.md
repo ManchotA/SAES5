@@ -5,7 +5,7 @@ Semaine du 5 au 11 octobre
 Concertation en vocal discord sur certains choix de développement du jeu tel que :
 
 
-    le point de vu du gameplay
+    le point de vu du gameplay ( 2d)
     la manière de se déplacer
     des implémentation d'ambiances 
     des modes de jeu
