@@ -1,5 +1,5 @@
 
-Semaine du 5 au 11 octobre /n
+Semaine du 5 au 11 octobre
 Concertation en vocal discord sur certains choix de développement du jeu tel que :
     le point de vu du gameplay
     la manière de se déplacer
