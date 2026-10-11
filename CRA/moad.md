@@ -6,7 +6,7 @@ Concertation en vocal discord sur certains choix de développement du jeu tel qu
 
 
     le point de vu du gameplay ( 2d)
-    la manière de se déplacer
+    la manière de se déplacer ( fleche , souris ou zqsd )
     des implémentation d'ambiances 
     des modes de jeu
     la manière de représenter les salles
