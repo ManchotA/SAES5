@@ -1,5 +1,7 @@
-semaine du 5-11 octobre :
-  décisions des chose qui nous manquer.
-  notamment le style graphique, ainsi que la vue, nous avons décider de faire de la 2d vue de coté avec un style légèrement pixeliser.
-  nous avons aussi décider de partir sur le moteur phazer pour notre point and click.
-  
+**Semaine du 5 au 11 octobre : décisions concernant les éléments manquants**
+
+Cette semaine, nous avons pris plusieurs décisions concernant les éléments qui restaient à définir pour notre jeu.
+
+Nous avons notamment choisi le style graphique : nous avons opté pour une **vue 2D de côté**, avec un style visuel légèrement pixelisé.
+
+Nous avons également décidé d'utiliser le moteur **Phaser** pour développer notre jeu de type *point-and-click*.
