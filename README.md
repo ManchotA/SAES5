@@ -56,3 +56,66 @@ Et je sais aussi faire de la musique. Je vais peut-être voir si je peux me form
 # Equipe
 
 Notre équipe possède une grande variété de compétences utiles à la SAE, et de plus, nous avons déjà travaillé ensemble une fois, ce qui rend plus simple la communication et la collaboration. Nous pensons donc que cette équipe est adaptée à la SAE.
+
+# Technique
+
+Escape game sur le thème de l'écologie : un front Angular + Phaser, un back FastAPI + SQLite, et un boîtier à boutons branché en USB.
+
+## Structure
+
+| Dossier      | Contenu                                                                    |
+| ------------ | -------------------------------------------------------------------------- |
+| `front/`     | Angular 22 (avec zone.js) + Phaser 4                                       |
+| `back/`      | Python : FastAPI, SQLModel (SQLite), pyserial                              |
+| `back/data/` | Base SQLite `escape.db`, créée automatiquement par le back, non versionnée |
+
+## Prérequis
+
+- **Node.js 24.15 ou plus** (exigé par Angular 22) : `node --version`
+- **Python 3.12 ou plus** : `python --version`
+
+## Installation
+
+### Front
+
+```bash
+cd front
+npm install
+```
+
+npm peut afficher un avertissement `allow-scripts` sur `esbuild`, `lmdb`, etc. : il est normal, rien à faire.
+
+### Back
+
+```bash
+cd back
+python -m venv .venv
+```
+
+Activer l'environnement :
+
+- Windows : `.venv\Scripts\activate` (si PowerShell refuse d'exécuter le script, utiliser un terminal `cmd`)
+- Linux / macOS : `source .venv/bin/activate`
+
+Puis installer les dépendances :
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+`requirements.txt` contient ce qu'il faut pour faire tourner le jeu ; `requirements-dev.txt` y ajoute les outils de développement (Ruff, pytest).
+
+## Commandes
+
+| Action                      | Commande         | Dossier  |
+| --------------------------- | ---------------- | -------- |
+| Lancer le front en dev      | `npm start`      | `front/` |
+| Vérifier le code TypeScript | `npm run lint`   | `front/` |
+| Formater le code TypeScript | `npm run format` | `front/` |
+| Vérifier le code Python     | `ruff check .`   | `back/`  |
+| Formater le code Python     | `ruff format .`  | `back/`  |
+| Lancer les tests            | `pytest`         | `back/`  |
+
+Le front de dev tourne sur http://localhost:4200. Les appels vers `/api` et `/ws` sont redirigés vers le back sur le port 8000 (voir `front/proxy.conf.json`).
+
+Le back n'a pas encore de code : son lancement sera documenté ici quand il existera.
