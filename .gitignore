@@ -1,16 +1,27 @@
+# Le front a son propre front/.gitignore (généré par Angular)
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
 # Compiled output
 /dist
 /tmp
 /out-tsc
 /bazel-out
 
+# Configuration locale
+.env
 # Node
 /node_modules
 npm-debug.log
 yarn-error.log
 
+# Scripts perso, non partagés
+commit.bat
 # IDEs and editors
 .idea/
 .project
@@ -20,6 +31,8 @@ yarn-error.log
 .settings/
 *.sublime-workspace
 
+# Base SQLite, créée par le back au démarrage
+back/data/*.db
 # Visual Studio Code
 .vscode/*
 !.vscode/settings.json
@@ -29,6 +42,7 @@ yarn-error.log
 !.vscode/mcp.json
 .history/*
 
+# Système
 # Miscellaneous
 /.angular/cache
 .sass-cache/
@@ -42,3 +56,5 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+.gitignore
