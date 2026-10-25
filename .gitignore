@@ -1,5 +1,14 @@
-# Le front a son propre front/.gitignore (généré par Angular)
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Fichiers ignorés par git pour toute l'équipe.
+# Ajoutez vos lignes dans la section « Ajouts de l'équipe » tout en bas.
+# Pour ignorer un fichier seulement chez vous, utilisez plutôt .git/info/exclude :
+# c'est un gitignore personnel, propre à votre PC et jamais commité.
+# Les règles propres à Angular (cache, build, tests) sont dans front/.gitignore.
+
+# Node : dépendances, builds et journaux
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
 
 # Python
 __pycache__/
@@ -7,22 +16,14 @@ __pycache__/
 .venv/
 .pytest_cache/
 .ruff_cache/
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
 
-# Configuration locale
+# Base SQLite, créée par le back au démarrage
+back/data/*.db
+
+# Configuration locale (ports, chemins, mots de passe…)
 .env
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
 
-# Scripts perso, non partagés
-commit.bat
-# IDEs and editors
+# Éditeurs
 .idea/
 .project
 .classpath
@@ -30,31 +31,19 @@ commit.bat
 *.launch
 .settings/
 *.sublime-workspace
+.history/
 
-# Base SQLite, créée par le back au démarrage
-back/data/*.db
-# Visual Studio Code
+# Visual Studio Code : seuls les réglages partagés sont versionnés
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/mcp.json
-.history/*
 
-# Système
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
-
-# System files
+# Systèmes
 .DS_Store
 Thumbs.db
+desktop.ini
 
-.gitignore
+# ----- Ajouts de l'équipe -----
