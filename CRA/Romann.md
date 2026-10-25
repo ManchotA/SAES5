@@ -18,3 +18,10 @@ J'ai un schéma final du nom de layout2 présent dans le répertoires captureEcr
 Donc moi j'ai pour l'instant le rôle de faire la recherche de l'identité visuelle, quelles outils on va utiliser, je me charge de faire les musiques puisque j'ai de l'expérience sur ça.
 
 En fonction de la progression du projets, j'aurais d'autres responsabilités qui vont s'ajouter naturellement.
+
+## Semaine du 12 au 18 octobre : décisions concernant les éléments manquants
+
+Pour le downscaling j'utilise Pixellt, ce que je vais faire c'est prendre une image de paysage pour les visuels du jeu, baisser la qualité de l'image jusqu'à quelle soit pixellisé avec l'outil que j'ai mentionné.
+Après je vais l'ajuster à ma façon l'image downscalé sur libreSprite, c'est un logiciel où on fais du pixel art. Donc je vais faire des visuels simple parce que je suis neophyte dans ce domaine.
+
+Après je peux avoir un png des ces visuels, et on peux les implémanter dans le code Angular avec la bibliothèque phaser qui est compatible pour ce cas de figure précis.
