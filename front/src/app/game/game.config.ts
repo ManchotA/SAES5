@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { BootScene } from './scenes/boot.scene';
 import { PreloadScene } from './scenes/preload.scene';
-import { LevelScene } from './scenes/level.scene';
+import { RoomScene } from './scenes/room.scene';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -13,5 +13,5 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     arcade: { gravity: { x: 0, y: 900 }, debug: true },
   },
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-  scene: [BootScene, PreloadScene, LevelScene],
+  scene: [BootScene, PreloadScene, RoomScene],
 };
