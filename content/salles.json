@@ -1,0 +1,90 @@
+{
+  "salles": [
+    {
+      "id": "e1_salle1",
+      "etage": 1,
+      "nom": "Salle 1.1",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": [
+        {
+          "id": "note",
+          "titre": "Note provisoire",
+          "texte": "Document de test : le vrai contenu viendra avec le game design."
+        }
+      ]
+    },
+    {
+      "id": "e1_salle2",
+      "etage": 1,
+      "nom": "Salle 1.2",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": []
+    },
+    {
+      "id": "e1_salle3",
+      "etage": 1,
+      "nom": "Salle 1.3",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": []
+    },
+    {
+      "id": "e2_salle1",
+      "etage": 2,
+      "nom": "Salle 2.1",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": []
+    },
+    {
+      "id": "e2_salle2",
+      "etage": 2,
+      "nom": "Salle 2.2",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": []
+    },
+    {
+      "id": "e2_salle3",
+      "etage": 2,
+      "nom": "Salle 2.3",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": []
+    },
+    {
+      "id": "e3_salle1",
+      "etage": 3,
+      "nom": "Salle 3.1",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": []
+    },
+    {
+      "id": "e3_salle2",
+      "etage": 3,
+      "nom": "Salle 3.2",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": []
+    },
+    {
+      "id": "e3_salle3",
+      "etage": 3,
+      "nom": "Salle 3.3",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": []
+    },
+    {
+      "id": "e4_finale",
+      "etage": 4,
+      "nom": "Salle finale",
+      "mecanique": "factice",
+      "parametres": {},
+      "documents": []
+    }
+  ]
+}
