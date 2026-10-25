@@ -11,4 +11,6 @@ J'ai aussi commencé à travailler sur la disposition du timer, qui sera donc un
 
 **Semaine du 12 au 18 octobre : décisions concernant les éléments manquants**
 
-nous avons pu commencer a creer l'architecture initialle du projet, c'est a dire 
+nous avons pu commencer a creer l'architecture initialle du projet, c'est a dire la creation de l'environement de devellopement, donc l'installation des divers module naisseçaire.
+
+nous avons aussi pu commencer la repartition du travail, personnelement je conte aider impeux tous les aspect du projet afin de pouvoire aider a faire le pont entre le front, le back et la gestion du micro crontroleur.
