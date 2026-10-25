@@ -19,9 +19,17 @@ Donc moi j'ai pour l'instant le rôle de faire la recherche de l'identité visue
 
 En fonction de la progression du projets, j'aurais d'autres responsabilités qui vont s'ajouter naturellement.
 
-## Semaine du 12 au 18 octobre : décisions concernant les éléments manquants
+## Semaine du 12 au 18 octobre
 
 Pour le downscaling j'utilise Pixellt, ce que je vais faire c'est prendre une image de paysage pour les visuels du jeu, baisser la qualité de l'image jusqu'à quelle soit pixellisé avec l'outil que j'ai mentionné.
 Après je vais l'ajuster à ma façon l'image downscalé sur libreSprite, c'est un logiciel où on fais du pixel art. Donc je vais faire des visuels simple parce que je suis neophyte dans ce domaine.
 
 Après je peux avoir un png des ces visuels, et on peux les implémanter dans le code Angular avec la bibliothèque phaser qui est compatible pour ce cas de figure précis.
+
+## Semaine du 19 au 25 octobre 
+
+J'ai essayé du coup de downscale une image d'une forêt histoire de tester l'outil pixelit, cependant le style n'est pas celle que l'on cherche, on va réelement faire le visuel à la main, j'ai tout d'abord essayé de faire des buissons/arbres avec LibreSprite, 
+cela a bien marché cependant l'outil dysfonctionne, en effet c'est un logiciel daté qui n'est plus entretenu/patché par ses développeurs. J'envisage d'opter pour la version payante Aseprite. 
+Cela ne me dérange pas d'investir pour acheter cette application puisque c'est un outil que je pense utiliser souvent même en dehors de ce projet à l'avenir, puisque il est très complet pour faire à peu près ce qu'on veut.
+
+J'invite à voir les images foretDownscale et debutsPixelArt pour voir ce que j'ai fait. J'ai surtout passé du temps à apprendre comment le logiciel primaire fonctionnait, j'avancerais beaucoup plus vite au fil du projet.
