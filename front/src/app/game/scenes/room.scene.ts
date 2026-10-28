@@ -49,10 +49,16 @@ export class RoomScene extends Phaser.Scene {
     body.setVelocityX(this.cursors.left.isDown ? -180 : this.cursors.right.isDown ? 180 : 0);
     if (this.cursors.up.isDown && body.blocked.down) body.setVelocityY(-450);
 
-    if (Phaser.Input.Keyboard.JustDown(this.touchE) &&
-        Math.abs(this.player.x - this.panneau.x) < 50) {
-      this.partie.lancerEnigme(this.roomId).catch(e => console.warn(e.error?.erreur ?? e));
-    }
+    if (Phaser.Input.Keyboard.JustDown(this.touchE)) {
+  const resolue = this.partie.partie()?.salles_resolues.includes(this.roomId);
+
+  if (Math.abs(this.player.x - this.panneau.x) < 50) {
+    this.partie.lancerEnigme(this.roomId)
+      .catch(e => console.warn(e.error?.erreur ?? e));
+  } else if (resolue && Math.abs(this.player.x - this.porte.x) < 60) {
+    this.salleSuivante();
+  }
+}
 
     // Chrono : recalculé à chaque image depuis fin_a, comme le prévoit le contrat
     const fin = this.partie.partie()?.fin_a;
@@ -66,4 +72,15 @@ export class RoomScene extends Phaser.Scene {
     const resolue = this.partie.partie()?.salles_resolues.includes(this.roomId);
     this.porte.setFillStyle(resolue ? 0x44aa44 : 0x884422);   // vert = ouverte
   }
+
+  private salleSuivante() {
+  const salles = this.registry.get('salles') as SallePublique[];
+  const i = salles.findIndex(s => s.id === this.roomId);
+  const suivante = salles[i + 1];
+  const ouverts = this.partie.partie()?.etages_ouverts ?? [];
+
+  if (suivante && ouverts.includes(suivante.etage)) {
+    this.scene.start('Room', { roomId: suivante.id });
+  }
+}
 }
