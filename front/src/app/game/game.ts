@@ -1,16 +1,16 @@
 import { Component, ElementRef, NgZone, OnDestroy, AfterViewInit, ViewChild, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import Phaser from 'phaser';
 import { gameConfig } from './game.config';
 import { ApiService } from '../services/api.service';
 import { PartieService } from '../services/partie.service';
+import { ParametresService } from '../services/parametres.service';
 
 @Component({
   selector: 'app-game',
   standalone: true,
   template: `
-    @if (erreur) {
-      <p class="erreur">{{ erreur }}</p>
-    }
+    @if (erreur) { <p class="erreur">{{ erreur }}</p> }
     <div #host class="game-host"></div>
   `,
   styles: [`
@@ -22,8 +22,10 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   @ViewChild('host', { static: true }) host!: ElementRef<HTMLDivElement>;
 
   private zone = inject(NgZone);
+  private router = inject(Router);
   private api = inject(ApiService);
   private partie = inject(PartieService);
+  private parametres = inject(ParametresService);
   private game?: Phaser.Game;
   private detruit = false;
 
@@ -31,10 +33,14 @@ export class GameComponent implements AfterViewInit, OnDestroy {
 
   async ngAfterViewInit() {
     try {
-      const salles = await this.api.getSalles(); 
+      const salles = await this.api.getSalles();
       await this.partie.init();
 
-      if (this.detruit) return; 
+      if (this.detruit) return;
+      if (this.partie.partie()?.statut !== 'en_cours') {   // pas de partie : retour au menu
+        this.router.navigate(['/']);
+        return;
+      }
 
       this.zone.runOutsideAngular(() => {
         this.game = new Phaser.Game({
@@ -44,7 +50,9 @@ export class GameComponent implements AfterViewInit, OnDestroy {
             preBoot: (game) => {
               game.registry.set('api', this.api);
               game.registry.set('partie', this.partie);
+              game.registry.set('parametres', this.parametres);
               game.registry.set('salles', salles);
+              game.registry.set('retourMenu', () => this.zone.run(() => this.router.navigate(['/'])));
             },
           },
         });
