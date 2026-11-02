@@ -15,12 +15,15 @@ nous avons pu commencer a creer l'architecture initialle du projet, c'est a dire
 nous avons aussi pu commencer la repartition du travail, personnelement je conte aider impeux tous les aspect du projet afin de pouvoire aider a faire le pont entre le front, le back et la gestion du micro crontroleur.
 
 
-**Semaine du 12 au 18 octobre : décisions concernant les éléments manquants**
+**Semaine du 19 au 25 octobre : décisions concernant les éléments manquants**
 
 nous avons pu commencer a creer l'architecture initialle du projet, c'est a dire la creation de l'environement de devellopement, donc l'installation des divers module naisseçaire.
 
 nous avons aussi pu commencer la repartition du travail, personnelement je conte aider impeux tous les aspect du projet afin de pouvoire aider a faire le pont entre le front, le back et la gestion du micro crontroleur.
 
-**Semaine du 12 au 18 octobre : denut de la creation du jeux**
+**Semaine du 26 au 1 novembre : debut de la creation du jeux**
 
 avec mo'ad nous avons pu travailler sur le front afin d'un d'avoire un premier visuel, nous avons donc un personnage qui se deplace et avons comprit les base de phazer notre environement de travaille
+
+j'ai aussi pu creer faire un sorte que le front fasse des requete au back, back qui pour l'instant est simulé
+
