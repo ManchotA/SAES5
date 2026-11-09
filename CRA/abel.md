@@ -27,3 +27,6 @@ avec mo'ad nous avons pu travailler sur le front afin d'un d'avoire un premier v
 
 j'ai aussi pu creer faire un sorte que le front fasse des requete au back, back qui pour l'instant est simulé
 
+**Semaine du 2 au 8 novembre : pause**
+
+étant en semaine de dst je n'ai malheureusement pas tellement pu avancé sur le projet
