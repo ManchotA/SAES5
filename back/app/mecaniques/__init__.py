@@ -4,9 +4,13 @@ Pour ajouter une mécanique : créer une sous-classe de Mecanique dans ce dossie
 puis l'enregistrer dans MECANIQUES.
 """
 
-from app.mecaniques.base import Mecanique
+from app.mecaniques.base import Mecanique, Reponse
 from app.mecaniques.factice import MecaniqueFactice
+from app.mecaniques.sequence import MecaniqueSequence
 
 MECANIQUES: dict[str, type[Mecanique]] = {
     "factice": MecaniqueFactice,
+    "sequence": MecaniqueSequence,
 }
+
+__all__ = ["MECANIQUES", "Mecanique", "Reponse"]

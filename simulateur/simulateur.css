@@ -1,0 +1,195 @@
+:root {
+  color-scheme: dark;
+  --fond: #15171c;
+  --carte: #1f232a;
+  --texte: #e8eaed;
+  --discret: #9aa0a6;
+  --bord: #343a44;
+  --eteinte: #2b2f36;
+  --ok: #3ccf6e;
+  --ko: #ff5c5c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font: 15px/1.5 system-ui, sans-serif;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  display: grid;
+  gap: 20px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--discret);
+}
+
+.etat {
+  margin: 0;
+  padding: 4px 12px;
+  border: 1px solid var(--bord);
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.etat.connecte {
+  color: var(--ok);
+  border-color: currentColor;
+}
+
+.etat.deconnecte {
+  color: var(--ko);
+  border-color: currentColor;
+}
+
+/* Le boîtier : 2 rangées de 5 touches, chacune avec sa LED */
+
+.boitier {
+  padding: 24px;
+  background: var(--carte);
+  border: 1px solid var(--bord);
+  border-radius: 20px;
+}
+
+.touches {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+.touche {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid #0006;
+  border-radius: 14px;
+  background: var(--led, var(--eteinte));
+  box-shadow: inset 0 -4px 0 #0005;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.12s,
+    box-shadow 0.12s,
+    transform 0.08s;
+}
+
+.touche.allumee {
+  box-shadow:
+    inset 0 -4px 0 #0003,
+    0 0 18px var(--led);
+}
+
+.touche.enfoncee {
+  transform: translateY(2px) scale(0.97);
+}
+
+.numero,
+.clavier {
+  position: absolute;
+  text-shadow: 0 1px 2px #000a;
+}
+
+.numero {
+  top: 6px;
+  left: 9px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.clavier {
+  right: 9px;
+  bottom: 6px;
+  font-size: 0.7rem;
+  opacity: 0.75;
+}
+
+.boitier.hors-ligne .touche {
+  opacity: 0.45;
+}
+
+.aide {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--discret);
+}
+
+/* Raccourcis de test et journal */
+
+.outils {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.outils h2 {
+  width: 100%;
+  margin: 0;
+}
+
+.outils button {
+  padding: 8px 14px;
+  border: 1px solid var(--bord);
+  border-radius: 10px;
+  background: var(--carte);
+  color: var(--texte);
+  font: inherit;
+  cursor: pointer;
+}
+
+.outils button:hover {
+  border-color: var(--discret);
+}
+
+.journal {
+  max-height: 220px;
+  margin: 0;
+  padding: 12px;
+  overflow: auto;
+  list-style: none;
+  background: var(--carte);
+  border: 1px solid var(--bord);
+  border-radius: 12px;
+  color: var(--discret);
+  font: 12px/1.6 ui-monospace, Consolas, monospace;
+}
+
+.journal:empty::before {
+  content: "Rien pour l'instant.";
+}
+
+@media (max-width: 420px) {
+  .boitier {
+    padding: 14px;
+  }
+
+  .touches {
+    gap: 8px;
+  }
+}

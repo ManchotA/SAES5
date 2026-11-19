@@ -14,10 +14,12 @@ if not exist back\.venv\Scripts\python.exe (
     goto fin
 )
 
-rem Back : serveur FastAPI sur le port 8000, relancé automatiquement à chaque modification du code
+rem Back : serveur FastAPI sur le port 8000, relancé automatiquement à chaque modification
+rem du code ou de content\salles.json
 if exist back\app\main.py (
-    start "Back - port 8000" /d back cmd /k .venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
+    start "Back - port 8000" /d back cmd /k .venv\Scripts\python.exe -m uvicorn app.main:app --port 8000 --reload --reload-dir app --reload-dir ..\content --reload-include *.json
     echo Back lancé sur http://localhost:8000
+    echo Simulateur du boîtier : http://localhost:8000/simulateur
 ) else (
     echo Le back n'a pas encore de serveur : il sera lancé ici dès que back\app\main.py existera.
 )

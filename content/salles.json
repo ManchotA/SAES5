@@ -1,34 +1,76 @@
 {
+  "couleurs": {
+    "rouge": [255, 0, 0],
+    "vert": [0, 200, 0],
+    "bleu": [0, 90, 255],
+    "jaune": [255, 200, 0],
+    "violet": [150, 0, 255],
+    "orange": [255, 100, 0],
+    "cyan": [0, 200, 200],
+    "rose": [255, 60, 150],
+    "blanc": [255, 255, 255]
+  },
   "salles": [
     {
-      "id": "e1_salle1",
-      "etage": 1,
-      "nom": "Salle 1.1",
-      "mecanique": "factice",
-      "parametres": {},
+      "id": "e0_tuto",
+      "etage": 0,
+      "nom": "Salle d'arrivée",
+      "mecanique": "sequence",
+      "parametres": {
+        "boutons": { "1": "rouge", "2": "vert", "3": "bleu" },
+        "etapes": [["rouge", "vert", "bleu"]]
+      },
       "documents": [
         {
-          "id": "note",
-          "titre": "Note provisoire",
-          "texte": "Document de test : le vrai contenu viendra avec le game design."
+          "id": "note_securite",
+          "titre": "Note de la sécurité",
+          "texte": "Texte provisoire : explique comment utiliser le boîtier."
         }
       ]
     },
     {
-      "id": "e1_salle2",
+      "id": "e1_racines",
       "etage": 1,
-      "nom": "Salle 1.2",
-      "mecanique": "factice",
-      "parametres": {},
+      "nom": "Salle des racines",
+      "mecanique": "sequence",
+      "parametres": {
+        "boutons": { "1": "rouge", "2": "vert", "3": "bleu", "4": "jaune" },
+        "etapes": [["jaune", "rouge", "bleu", "vert"]]
+      },
       "documents": []
     },
     {
-      "id": "e1_salle3",
+      "id": "e1_lumiere",
       "etage": 1,
-      "nom": "Salle 1.3",
-      "mecanique": "factice",
-      "parametres": {},
+      "nom": "Salle de la lumière",
+      "mecanique": "sequence",
+      "parametres": {
+        "boutons": { "1": "rouge", "2": "vert", "3": "bleu", "4": "jaune", "5": "violet" },
+        "etapes": [["violet", "bleu", "jaune", "rouge", "vert"]]
+      },
       "documents": []
+    },
+    {
+      "id": "e1_incubateurs",
+      "etage": 1,
+      "nom": "Salle des incubateurs",
+      "mecanique": "sequence",
+      "parametres": {
+        "boutons": { "1": "rouge", "2": "vert", "3": "bleu", "4": "jaune" },
+        "etapes": [
+          ["rouge", "jaune"],
+          ["bleu", "vert"],
+          ["jaune", "bleu"],
+          ["vert", "rouge", "bleu", "jaune"]
+        ]
+      },
+      "documents": [
+        {
+          "id": "fiche_graines",
+          "titre": "Fiche des graines",
+          "texte": "Texte provisoire : décrit les graines et la couleur par laquelle commencer."
+        }
+      ]
     },
     {
       "id": "e2_salle1",

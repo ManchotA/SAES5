@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simulateur du boîtier</title>
+    <link rel="stylesheet" href="/simulateur/simulateur.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Simulateur du boîtier</h1>
+        <p id="etat" class="etat">Connexion…</p>
+      </header>
+
+      <section id="boitier" class="boitier hors-ligne" aria-label="Touches du boîtier">
+        <div id="touches" class="touches"></div>
+        <p class="aide">Clique sur une touche, ou utilise les chiffres 1 à 0 du clavier.</p>
+      </section>
+
+      <section class="outils">
+        <h2>Raccourcis de test</h2>
+        <button type="button" data-action="resoudre">Résoudre l'énigme en cours</button>
+        <button type="button" data-action="perdre">Faire perdre la partie</button>
+      </section>
+
+      <section>
+        <h2>Journal</h2>
+        <ol id="journal" class="journal"></ol>
+      </section>
+    </main>
+    <script src="/simulateur/simulateur.js"></script>
+  </body>
+</html>

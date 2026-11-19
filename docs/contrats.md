@@ -10,13 +10,20 @@ Un seul fichier : `content/salles.json`.
 
 ```json
 {
+  "couleurs": {
+    "rouge": [255, 0, 0],
+    "vert": [0, 200, 0]
+  },
   "salles": [
     {
-      "id": "e1_aquarium",
+      "id": "e1_racines",
       "etage": 1,
-      "nom": "Aquarium",
-      "mecanique": "couleurs",
-      "parametres": {},
+      "nom": "Salle des racines",
+      "mecanique": "sequence",
+      "parametres": {
+        "boutons": { "1": "rouge", "2": "vert" },
+        "etapes": [["vert", "rouge", "vert"]]
+      },
       "documents": [
         { "id": "rapport", "titre": "Rapport de maintenance", "texte": "..." }
       ]
@@ -27,14 +34,29 @@ Un seul fichier : `content/salles.json`.
 
 | Champ | Rôle |
 |---|---|
+| `couleurs` | Palette de couleurs nommées, en `[rouge, vert, bleu]` de 0 à 255. Les mécaniques désignent les couleurs par leur nom. |
 | `id` | Identifiant unique de la salle. Sert de lien avec les scènes et les visuels côté front. |
-| `etage` | Étage de la salle (1 à 3). La salle finale est seule à l'étage 4. |
+| `etage` | Étage de la salle (1 à 3). La salle tuto, facultative, est à l'étage 0. La salle finale est seule à l'étage 4. |
 | `nom` | Nom affiché. |
-| `mecanique` | Type d'énigme (`couleurs` pour l'instant). |
-| `parametres` | Réglages propres à la mécanique. Vide pour l'instant, chaque mécanique définira les siens. |
+| `mecanique` | Type d'énigme : `sequence` (séquence de couleurs), ou `factice` pour une salle provisoire (le bouton 1 la résout). |
+| `parametres` | Réglages propres à la mécanique (voir ci-dessous). |
 | `documents` | Textes que le joueur peut lire dans la salle. |
 
 Les images et textures ne sont pas dans ce fichier : le front les associe lui-même à chaque `id`.
+
+Le back vérifie tout le fichier au démarrage et refuse de démarrer en cas d'erreur, en indiquant la salle en cause.
+
+### Paramètres de la mécanique `sequence`
+
+Le joueur reproduit une ou plusieurs suites de couleurs sur le boîtier. Au lancement, chaque bouton utilisé s'allume dans sa couleur.
+
+Seule une étape réussie se voit : les boutons clignotent en vert, et restent verts une fois l'énigme résolue. Un appui, juste ou faux, ne donne aucun retour, sinon on pourrait trouver la solution en essayant les touches une par une.
+
+| Paramètre | Rôle |
+|---|---|
+| `boutons` | Bouton (`"1"` à `"10"`) → nom de couleur de la palette. |
+| `etapes` | Une ou plusieurs suites de couleurs, à réussir dans l'ordre (ex. une étape par graine, puis le code final). |
+| `erreur.recommencer` | Après une erreur : `"etape"` (l'étape en cours repart du début, par défaut) ou `"tout"`. |
 
 ---
 
@@ -44,40 +66,46 @@ Le front appelle le back seulement si l'action **change l'état de la partie** o
 
 | Méthode | Route | Rôle |
 |---|---|---|
-| GET | `/api/sante` | Vérifie que le back tourne. |
-| GET | `/api/salles` | Liste des salles, **partie publique seulement** : `id`, `etage`, `nom`, `documents`. Jamais `mecanique` ni `parametres`. |
+| GET | `/api/sante` | Vérifie que le back tourne : `{ "statut": "ok" }`. |
+| GET | `/api/salles` | Liste (tableau JSON) des salles, **partie publique seulement** : `id`, `etage`, `nom`, `documents`. Jamais `mecanique` ni `parametres`. |
 | POST | `/api/partie` | Lance une nouvelle partie : remise à zéro, LEDs éteintes, timer démarré. |
 | GET | `/api/partie` | État de la partie en cours. |
-| POST | `/api/partie/salles/{id}/enigme` | Le joueur appuie sur E devant le panneau : le back lance l'énigme et allume les LEDs. |
+| POST | `/api/partie/salles/{id}/enigme` | Le joueur appuie sur E devant le panneau : le back lance l'énigme et allume les LEDs. Si une autre énigme était en cours, elle est remplacée. |
 | DELETE | `/api/partie/salles/{id}/enigme` | Le joueur quitte la salle sans avoir résolu l'énigme : le back l'annule et éteint les LEDs. |
 
 Il n'y a qu'une partie à la fois (un seul PC, un seul joueur), d'où `partie` au singulier et sans identifiant.
 
-Une route renvoie toujours la ressource entière en un seul appel. Le front charge `/api/salles` une fois au démarrage et garde le résultat en mémoire.
+Une route renvoie toujours la ressource entière en un seul appel : les routes de `partie` renvoient l'état de la partie. Le front charge `/api/salles` une fois au démarrage et garde le résultat en mémoire.
 
 En cas d'erreur, le back renvoie un code HTTP adapté (`404` salle inconnue, `409` action impossible dans l'état actuel, par exemple une salle d'un étage encore fermé) avec un corps `{ "erreur": "..." }`.
 
 ### État de la partie
 
-Renvoyé par `GET /api/partie`, `POST /api/partie` et dans chaque message WebSocket.
+Renvoyé par les routes de `partie` et dans chaque message WebSocket.
 
 ```json
 {
   "statut": "en_cours",
   "fin_a": "2026-10-25T15:44:00",
-  "etages_ouverts": [1],
-  "salles_resolues": [],
-  "enigme_en_cours": null
+  "etages_ouverts": [0, 1],
+  "salles_resolues": ["e0_tuto"],
+  "enigme_en_cours": "e1_racines",
+  "enigme_etat": {
+    "etapes_reussies": 1,
+    "nb_etapes": 4,
+    "longueur_etape": 2
+  }
 }
 ```
 
 | Champ | Valeurs |
 |---|---|
 | `statut` | `aucune`, `en_cours`, `gagnee`, `perdue` |
-| `fin_a` | Heure de fin de la partie |
+| `fin_a` | Heure de fin de la partie (heure locale du PC), ou `null` |
 | `etages_ouverts` | Étages accessibles |
 | `salles_resolues` | `id` des salles résolues |
 | `enigme_en_cours` | `id` de la salle dont l'énigme est active, ou `null` |
+| `enigme_etat` | Avancement de l'énigme en cours, propre à sa mécanique, ou `null`. Jamais la solution, ni rien qui permette de la deviner. Pour `sequence` : étapes réussies sur le total, et longueur de l'étape en cours. |
 
 ---
 
@@ -88,11 +116,12 @@ Adresse : `/ws`. Le back y envoie les événements qui ne viennent pas du front 
 Chaque message a la même forme, avec l'état complet de la partie :
 
 ```json
-{ "type": "enigme_resolue", "salle": "e1_aquarium", "partie": { ... } }
+{ "type": "enigme_resolue", "salle": "e1_racines", "partie": { ... } }
 ```
 
 | Type | Quand |
 |---|---|
+| `enigme_progression` | L'avancement visible de l'énigme en cours a changé (pour `sequence` : une étape réussie). Le détail est dans `partie.enigme_etat`. |
 | `enigme_resolue` | Le joueur a donné la bonne réponse sur le boîtier. Le front ouvre la porte. |
 | `partie_terminee` | Victoire (salle finale résolue) ou défaite (temps écoulé). Le résultat est dans `partie.statut`. |
 | `boitier_deconnecte` | Le lien avec le boîtier est perdu. |
@@ -108,14 +137,31 @@ Comme chaque message porte l'état complet, le front n'a rien à déduire : par 
 - Le front fait le décompte lui-même pour l'affichage, en recalculant `fin_a − heure actuelle` à chaque image. Un lag ne crée donc aucun décalage, et un rafraîchissement de la page reprend au bon endroit.
 - Le front affiche le temps sous la forme qu'il veut (chiffres, jauge…).
 - **C'est le back qui décide de la fin** : une tâche en fond déclare la défaite à l'échéance et envoie `partie_terminee`.
+- La durée (45 minutes) se règle avec la variable d'environnement `ESCAPE_DUREE_MINUTES`, pratique pour tester.
 
 ---
 
 ## 5. Boîtier
 
 - Le back parle au boîtier en termes d'**intentions** (« allumer la LED 3 en rouge », « le bouton 5 a été pressé »), jamais en messages bruts.
-- Le simulateur est un programme fourni à part, pas encore reçu. Quand il arrivera, un seul adaptateur traduira ces intentions dans son format. Idéalement, le vrai boîtier utilisera le même.
-- Une tâche en fond écoute le boîtier en continu. Si la lecture échoue, le lien est considéré comme coupé.
+- Pour l'instant, le boîtier est **simulé** : une page web du dossier `simulateur/`, servie par le back sur `/simulateur`. Le format d'échange du vrai boîtier sera branché plus tard sur les mêmes intentions.
+- Le boîtier se connecte au WebSocket `/ws/boitier`. Sa connexion et sa déconnexion déclenchent `boitier_reconnecte` et `boitier_deconnecte` côté écrans.
+
+Messages du back vers le boîtier :
+
+| Message | Rôle |
+|---|---|
+| `{ "type": "leds", "couleurs": [[r, v, b], ...] }` | État complet des 10 LEDs, du bouton 1 au bouton 10. Envoyé à la connexion et à chaque changement. |
+| `{ "type": "clignoter", "bouton": 3, "couleur": [r, v, b], "duree": 400 }` | La LED brille un instant (en millisecondes) dans cette couleur, puis revient à son état. |
+| `{ "type": "erreur", "message": "..." }` | Une demande du boîtier a été refusée. |
+
+Messages du boîtier vers le back :
+
+| Message | Rôle |
+|---|---|
+| `{ "type": "appui", "bouton": 5 }` | Le bouton 5 a été pressé. |
+| `{ "type": "test", "action": "resoudre" }` | Outil de test : résout l'énigme en cours sans la jouer. |
+| `{ "type": "test", "action": "perdre" }` | Outil de test : termine la partie comme si le temps était écoulé. |
 
 ---
 
@@ -130,5 +176,5 @@ Comme chaque message porte l'état complet, le front n'a rien à déduire : par 
 
 ## À définir plus tard
 
-- Les paramètres de chaque mécanique et la façon de générer les énigmes (dépend du GD).
-- Le protocole exact du boîtier (dépend du simulateur).
+- Les mécaniques des étages 2 et 3, et la façon de générer les énigmes (dépend du GD).
+- Le format d'échange du vrai boîtier.

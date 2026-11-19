@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from app.contenu import Salle
+from app.contenu import Contenu, Salle
 from app.partie import Partie
 
 DEBUT = datetime(2026, 10, 25, 15, 0, 0)
@@ -27,10 +27,10 @@ def horloge() -> FausseHorloge:
 
 
 @pytest.fixture
-def salles() -> dict[str, Salle]:
+def contenu() -> Contenu:
     """Petit bâtiment de test, indépendant de content/salles.json.
 
-    2 salles à l'étage 1, puis 1 salle par étage jusqu'à la finale.
+    2 salles à l'étage 1, puis 1 salle par étage jusqu'à la finale, toutes factices.
     """
     liste = [
         Salle(id="e1_a", etage=1, nom="A", mecanique="factice"),
@@ -39,12 +39,12 @@ def salles() -> dict[str, Salle]:
         Salle(id="e3_a", etage=3, nom="D", mecanique="factice"),
         Salle(id="finale", etage=4, nom="Finale", mecanique="factice"),
     ]
-    return {salle.id: salle for salle in liste}
+    return Contenu(couleurs={}, salles={salle.id: salle for salle in liste})
 
 
 @pytest.fixture
-def partie(salles, horloge) -> Partie:
+def partie(contenu, horloge) -> Partie:
     """Une partie qui vient de commencer."""
-    partie = Partie(salles, horloge)
+    partie = Partie(contenu, horloge)
     partie.nouvelle()
     return partie

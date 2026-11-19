@@ -1,12 +1,18 @@
-"""Chargement et vérification du contenu des salles (content/salles.json)."""
+"""Chargement et vérification du contenu du jeu (content/salles.json).
+
+Le fichier contient une palette de couleurs nommées et la liste des salles.
+Toute erreur est signalée au démarrage, avec la salle en cause.
+"""
 
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from app.boitier import Couleur
 from app.mecaniques import MECANIQUES
 
-CHEMIN_SALLES = Path(__file__).resolve().parents[2] / "content" / "salles.json"
+CHEMIN_CONTENU = Path(__file__).resolve().parents[2] / "content" / "salles.json"
+ETAGE_TUTO = 0
 ETAGE_FINAL = 4
 
 
@@ -34,24 +40,40 @@ class Salle:
     def est_finale(self) -> bool:
         return self.etage == ETAGE_FINAL
 
+    def partie_publique(self) -> dict:
+        """Ce que le front a le droit de voir : jamais la mécanique ni ses paramètres."""
+        return {
+            "id": self.id,
+            "etage": self.etage,
+            "nom": self.nom,
+            "documents": [vars(doc) for doc in self.documents],
+        }
 
-def charger_salles(chemin: Path = CHEMIN_SALLES) -> dict[str, Salle]:
-    """Lit le fichier de contenu et renvoie les salles, rangées par id."""
+
+@dataclass
+class Contenu:
+    couleurs: dict[str, Couleur]
+    salles: dict[str, Salle]
+
+
+def charger_contenu(chemin: Path = CHEMIN_CONTENU) -> Contenu:
+    """Lit et vérifie le fichier de contenu."""
     try:
         donnees = json.loads(chemin.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as erreur:
         raise ContenuInvalide(f"Impossible de lire {chemin} : {erreur}") from erreur
-    return lire_salles(donnees)
+    return lire_contenu(donnees)
 
 
-def lire_salles(donnees: object) -> dict[str, Salle]:
-    """Vérifie le contenu déjà décodé et le transforme en salles."""
+def lire_contenu(donnees: object) -> Contenu:
+    """Vérifie le contenu déjà décodé et le transforme en palette et en salles."""
     if not isinstance(donnees, dict) or not isinstance(donnees.get("salles"), list):
         raise ContenuInvalide('Le contenu doit être de la forme { "salles": [...] }.')
 
+    couleurs = _lire_couleurs(donnees.get("couleurs", {}))
     salles: dict[str, Salle] = {}
     for brute in donnees["salles"]:
-        salle = _lire_salle(brute)
+        salle = _lire_salle(brute, couleurs)
         if salle.id in salles:
             raise ContenuInvalide(f"Identifiant de salle en double : {salle.id}")
         salles[salle.id] = salle
@@ -61,10 +83,29 @@ def lire_salles(donnees: object) -> dict[str, Salle]:
         raise ContenuInvalide(
             f"Il faut exactement une salle à l'étage {ETAGE_FINAL}, il y en a {nb_finales}."
         )
-    return salles
+    return Contenu(couleurs=couleurs, salles=salles)
 
 
-def _lire_salle(brute: object) -> Salle:
+def _lire_couleurs(brutes: object) -> dict[str, Couleur]:
+    if not isinstance(brutes, dict):
+        raise ContenuInvalide(
+            "« couleurs » doit associer un nom à [rouge, vert, bleu]."
+        )
+    couleurs = {}
+    for nom, rvb in brutes.items():
+        if (
+            not isinstance(rvb, list)
+            or len(rvb) != 3
+            or not all(isinstance(v, int) and 0 <= v <= 255 for v in rvb)
+        ):
+            raise ContenuInvalide(
+                f"Couleur « {nom} » : il faut trois nombres entre 0 et 255, pas {rvb!r}."
+            )
+        couleurs[nom] = tuple(rvb)
+    return couleurs
+
+
+def _lire_salle(brute: object, couleurs: dict[str, Couleur]) -> Salle:
     try:
         salle = Salle(
             id=brute["id"],
@@ -82,12 +123,20 @@ def _lire_salle(brute: object) -> Salle:
             f"Salle mal formée, champ manquant ou invalide : {erreur}"
         ) from erreur
 
-    if salle.etage not in range(1, ETAGE_FINAL + 1):
+    if salle.etage not in range(ETAGE_TUTO, ETAGE_FINAL + 1):
         raise ContenuInvalide(
-            f"Salle {salle.id} : l'étage doit être entre 1 et {ETAGE_FINAL}, pas {salle.etage!r}."
+            f"Salle {salle.id} : l'étage doit être entre {ETAGE_TUTO} et {ETAGE_FINAL}, "
+            f"pas {salle.etage!r}."
         )
-    if salle.mecanique not in MECANIQUES:
+    mecanique = MECANIQUES.get(salle.mecanique)
+    if mecanique is None:
         raise ContenuInvalide(
             f"Salle {salle.id} : mécanique inconnue « {salle.mecanique} »."
         )
+    if not isinstance(salle.parametres, dict):
+        raise ContenuInvalide(f"Salle {salle.id} : « parametres » doit être un objet.")
+    try:
+        mecanique.verifier_parametres(salle.parametres, couleurs)
+    except (TypeError, ValueError) as erreur:
+        raise ContenuInvalide(f"Salle {salle.id} : {erreur}") from erreur
     return salle
