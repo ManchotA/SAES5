@@ -4,31 +4,34 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Simulateur du boîtier</title>
-    <link rel="stylesheet" href="/simulateur/simulateur.css" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #15171c;
+      }
+
+      main {
+        width: min(560px, calc(100% - 32px));
+        padding: 24px 0;
+      }
+    </style>
   </head>
   <body>
-    <main>
-      <header>
-        <h1>Simulateur du boîtier</h1>
-        <p id="etat" class="etat">Connexion…</p>
-      </header>
+    <!-- Page seule du simulateur, pratique sur un deuxième écran.
+         Le même boîtier existe aussi dans le jeu, derrière une icône (widget.js). -->
+    <main id="simulateur"></main>
+    <script type="module">
+      import { creerSimulateur } from '/simulateur/simulateur.js';
 
-      <section id="boitier" class="boitier hors-ligne" aria-label="Touches du boîtier">
-        <div id="touches" class="touches"></div>
-        <p class="aide">Clique sur une touche, ou utilise les chiffres 1 à 0 du clavier.</p>
-      </section>
-
-      <section class="outils">
-        <h2>Raccourcis de test</h2>
-        <button type="button" data-action="resoudre">Résoudre l'énigme en cours</button>
-        <button type="button" data-action="perdre">Faire perdre la partie</button>
-      </section>
-
-      <section>
-        <h2>Journal</h2>
-        <ol id="journal" class="journal"></ol>
-      </section>
-    </main>
-    <script src="/simulateur/simulateur.js"></script>
+      const reglages = await fetch('/simulateur/reglages.json')
+        .then((reponse) => reponse.json())
+        .catch(() => ({}));
+      creerSimulateur(document.getElementById('simulateur'), {
+        outilsDeTest: Boolean(reglages.outils_de_test),
+      }).activer();
+    </script>
   </body>
 </html>

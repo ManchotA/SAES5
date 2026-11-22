@@ -1,6 +1,7 @@
-:root {
-  color-scheme: dark;
-  --fond: #15171c;
+/* Styles du simulateur, chargés à l'intérieur de son shadow DOM :
+   ils ne touchent jamais la page qui l'accueille. */
+
+:host {
   --carte: #1f232a;
   --texte: #e8eaed;
   --discret: #9aa0a6;
@@ -8,53 +9,50 @@
   --eteinte: #2b2f36;
   --ok: #3ccf6e;
   --ko: #ff5c5c;
+  color-scheme: dark;
+  color: var(--texte);
+  font: 14px/1.5 system-ui, sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  background: var(--fond);
-  color: var(--texte);
-  font: 15px/1.5 system-ui, sans-serif;
+[hidden] {
+  display: none !important;
 }
 
-main {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 24px 16px;
+/* --- Le boîtier : 2 rangées de 5 touches, chacune avec sa LED --- */
+
+.boitier {
   display: grid;
-  gap: 20px;
+  gap: 14px;
+  padding: 18px;
+  background: var(--carte);
+  border: 1px solid var(--bord);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px #000a;
 }
 
-header {
+.entete {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
   gap: 12px;
 }
 
-h1 {
-  margin: 0;
-  font-size: 1.4rem;
-}
-
 h2 {
-  margin: 0 0 10px;
+  margin: 0;
   font-size: 1rem;
-  font-weight: 600;
-  color: var(--discret);
 }
 
 .etat {
   margin: 0;
-  padding: 4px 12px;
+  padding: 2px 10px;
   border: 1px solid var(--bord);
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  color: var(--discret);
 }
 
 .etat.connecte {
@@ -67,26 +65,17 @@ h2 {
   border-color: currentColor;
 }
 
-/* Le boîtier : 2 rangées de 5 touches, chacune avec sa LED */
-
-.boitier {
-  padding: 24px;
-  background: var(--carte);
-  border: 1px solid var(--bord);
-  border-radius: 20px;
-}
-
 .touches {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+  gap: 10px;
 }
 
 .touche {
   position: relative;
   aspect-ratio: 1;
   border: 1px solid #0006;
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--led, var(--eteinte));
   box-shadow: inset 0 -4px 0 #0005;
   color: #fff;
@@ -101,7 +90,7 @@ h2 {
 .touche.allumee {
   box-shadow:
     inset 0 -4px 0 #0003,
-    0 0 18px var(--led);
+    0 0 16px var(--led);
 }
 
 .touche.enfoncee {
@@ -115,51 +104,46 @@ h2 {
 }
 
 .numero {
-  top: 6px;
-  left: 9px;
-  font-size: 0.75rem;
+  top: 5px;
+  left: 8px;
+  font-size: 0.7rem;
   font-weight: 700;
 }
 
 .clavier {
-  right: 9px;
-  bottom: 6px;
-  font-size: 0.7rem;
+  right: 8px;
+  bottom: 5px;
+  font-size: 0.65rem;
   opacity: 0.75;
 }
 
-.boitier.hors-ligne .touche {
+.hors-ligne .touche {
   opacity: 0.45;
 }
 
 .aide {
-  margin: 14px 0 0;
+  margin: 0;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--discret);
 }
 
-/* Raccourcis de test et journal */
+/* --- Raccourcis de test et journal --- */
 
 .outils {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.outils h2 {
-  width: 100%;
-  margin: 0;
+  gap: 8px;
 }
 
 .outils button {
-  padding: 8px 14px;
+  padding: 6px 12px;
   border: 1px solid var(--bord);
   border-radius: 10px;
-  background: var(--carte);
+  background: transparent;
   color: var(--texte);
   font: inherit;
+  font-size: 0.85rem;
   cursor: pointer;
 }
 
@@ -167,15 +151,20 @@ h2 {
   border-color: var(--discret);
 }
 
+summary {
+  font-size: 0.85rem;
+  color: var(--discret);
+  cursor: pointer;
+}
+
 .journal {
-  max-height: 220px;
-  margin: 0;
-  padding: 12px;
+  max-height: 160px;
+  margin: 8px 0 0;
+  padding: 10px;
   overflow: auto;
   list-style: none;
-  background: var(--carte);
   border: 1px solid var(--bord);
-  border-radius: 12px;
+  border-radius: 10px;
   color: var(--discret);
   font: 12px/1.6 ui-monospace, Consolas, monospace;
 }
@@ -184,12 +173,73 @@ h2 {
   content: "Rien pour l'instant.";
 }
 
-@media (max-width: 420px) {
-  .boitier {
-    padding: 14px;
-  }
+/* --- Icône et panneau du boîtier virtuel dans le jeu (widget.js) --- */
 
-  .touches {
-    gap: 8px;
-  }
+.widget {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 2147483000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.icone {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid var(--bord);
+  border-radius: 12px;
+  background: rgb(21 23 28 / 0.85);
+  box-shadow: 0 4px 14px #0008;
+  cursor: pointer;
+}
+
+.icone:hover,
+.ouvert .icone {
+  border-color: var(--discret);
+}
+
+.icone svg {
+  width: 30px;
+  height: 13px;
+  fill: var(--eteinte);
+  stroke: #fff3;
+  stroke-width: 0.5;
+}
+
+.voyant {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ko);
+}
+
+.connecte .voyant {
+  background: var(--ok);
+}
+
+.panneau {
+  width: min(380px, calc(100vw - 24px));
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.15s,
+    transform 0.15s,
+    visibility 0.15s;
+}
+
+.ouvert .panneau {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
 }

@@ -17,15 +17,22 @@ journal = logging.getLogger(__name__)
 
 
 class Jeu:
-    def __init__(self, partie: Partie, boitier: Boitier) -> None:
+    def __init__(
+        self, partie: Partie, boitier: Boitier, outils_de_test: bool = False
+    ) -> None:
         self.partie = partie
         self.boitier = boitier
         self.verrou = asyncio.Lock()
         self.ecrans: set = set()
-        self.outils_de_test: dict[str, Callable[[], None]] = {
-            "resoudre": partie.resoudre_enigme_en_cours,
-            "perdre": partie.declarer_defaite,
-        }
+        # Raccourcis du simulateur (« résoudre », « perdre ») : seulement en développement
+        self.outils_de_test: dict[str, Callable[[], None]] = (
+            {
+                "resoudre": partie.resoudre_enigme_en_cours,
+                "perdre": partie.declarer_defaite,
+            }
+            if outils_de_test
+            else {}
+        )
 
     async def executer(self, action: Callable[[], object]) -> dict:
         """Exécute une action sur la partie sous le verrou, publie ses effets et renvoie l'état."""

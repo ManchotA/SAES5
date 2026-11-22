@@ -3,7 +3,10 @@
 Lancement en développement, depuis back/ (ou avec dev.bat à la racine) :
     .venv\\Scripts\\python -m uvicorn app.main:app --reload --port 8000
 
-La durée d'une partie se règle avec la variable d'environnement ESCAPE_DUREE_MINUTES.
+Variables d'environnement :
+- ESCAPE_DUREE_MINUTES : durée d'une partie (45 par défaut) ;
+- ESCAPE_DEV=1 (mis par dev.bat) : mode développement, où l'icône du boîtier virtuel est
+  visible par défaut et où les raccourcis de test du simulateur sont acceptés.
 """
 
 import asyncio
@@ -32,12 +35,16 @@ def duree_configuree() -> timedelta:
 
 
 def creer_app(
-    partie: Partie | None = None, intervalle_timer: float = INTERVALLE_TIMER
+    partie: Partie | None = None,
+    intervalle_timer: float = INTERVALLE_TIMER,
+    mode_dev: bool | None = None,
 ) -> FastAPI:
     """Construit le serveur. Les tests passent leur propre partie (fausse horloge…)."""
     if partie is None:
         partie = Partie(charger_contenu(), duree=duree_configuree())
-    jeu = Jeu(partie, Boitier())
+    if mode_dev is None:
+        mode_dev = os.environ.get("ESCAPE_DEV") == "1"
+    jeu = Jeu(partie, Boitier(), outils_de_test=mode_dev)
 
     @asynccontextmanager
     async def cycle_de_vie(app: FastAPI):
@@ -86,10 +93,9 @@ def creer_app(
         await lien.accept()
         jeu.ecrans.add(lien)
         try:
+            # Le front n'envoie rien : on attend seulement sa déconnexion
             while True:
-                await (
-                    lien.receive_text()
-                )  # le front n'envoie rien : on attend la déconnexion
+                await lien.receive_text()
         except WebSocketDisconnect:
             jeu.ecrans.discard(lien)
 
@@ -111,7 +117,11 @@ def creer_app(
         except WebSocketDisconnect:
             await jeu.deconnecter_boitier(lien)
 
-    # --- Simulateur du boîtier ---
+    # --- Simulateur du boîtier (page seule et icône dans le jeu) ---
+
+    @app.get("/simulateur/reglages.json")
+    async def reglages_simulateur() -> dict:
+        return {"visible_par_defaut": mode_dev, "outils_de_test": mode_dev}
 
     if DOSSIER_SIMULATEUR.is_dir():
         app.mount(

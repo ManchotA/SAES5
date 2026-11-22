@@ -12,10 +12,8 @@ NOIR, ROUGE, VERT = [0, 0, 0], [255, 0, 0], [0, 200, 0]
 TOUT_ETEINT = {"type": "leds", "couleurs": [NOIR] * 10}
 
 
-@pytest.fixture
-def client(horloge):
-    """Serveur de test : une salle « séquence » en deux étapes (rouge, puis vert)
-    et une finale factice."""
+def partie_de_test(horloge) -> Partie:
+    """Une salle « séquence » en deux étapes (rouge, puis vert) et une finale factice."""
     salles = [
         Salle(
             id="e1_seq",
@@ -30,10 +28,22 @@ def client(horloge):
         ),
         Salle(id="finale", etage=4, nom="Finale", mecanique="factice"),
     ]
-    partie = Partie(
-        Contenu(couleurs=PALETTE, salles={s.id: s for s in salles}), horloge
-    )
-    with TestClient(creer_app(partie, intervalle_timer=0.05)) as client:
+    return Partie(Contenu(couleurs=PALETTE, salles={s.id: s for s in salles}), horloge)
+
+
+@pytest.fixture
+def client(horloge):
+    """Serveur de test en mode développement (comme avec dev.bat)."""
+    app = creer_app(partie_de_test(horloge), intervalle_timer=0.05, mode_dev=True)
+    with TestClient(app) as client:
+        yield client
+
+
+@pytest.fixture
+def client_expo(horloge):
+    """Serveur de test hors développement (comme à l'exposition)."""
+    app = creer_app(partie_de_test(horloge), intervalle_timer=0.05, mode_dev=False)
+    with TestClient(app) as client:
         yield client
 
 
@@ -199,3 +209,34 @@ def test_le_simulateur_est_servi(client):
     assert reponse.status_code == 200
     assert "Simulateur du boîtier" in reponse.text
     assert client.get("/simulateur").status_code == 200
+    assert client.get("/simulateur/widget.js").status_code == 200
+
+
+def test_en_developpement_le_boitier_virtuel_est_visible_avec_ses_outils(client):
+    assert client.get("/simulateur/reglages.json").json() == {
+        "visible_par_defaut": True,
+        "outils_de_test": True,
+    }
+
+
+def test_hors_developpement_le_boitier_virtuel_est_cache_sans_outils(client_expo):
+    assert client_expo.get("/simulateur/reglages.json").json() == {
+        "visible_par_defaut": False,
+        "outils_de_test": False,
+    }
+
+
+def test_hors_developpement_les_raccourcis_de_test_sont_ignores(client_expo):
+    with client_expo.websocket_connect("/ws/boitier") as boitier:
+        boitier.receive_json()
+        client_expo.post("/api/partie")
+        boitier.receive_json()
+        client_expo.post("/api/partie/salles/e1_seq/enigme")
+        boitier.receive_json()
+
+        boitier.send_json({"type": "test", "action": "resoudre"})  # ignoré
+        boitier.send_json({"type": "appui", "bouton": 1})
+
+        # L'énigme est toujours en cours : l'appui réussit sa première étape
+        assert boitier.receive_json()["type"] == "clignoter"
+        assert client_expo.get("/api/partie").json()["salles_resolues"] == []

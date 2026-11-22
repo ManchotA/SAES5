@@ -144,7 +144,12 @@ Comme chaque message porte l'état complet, le front n'a rien à déduire : par 
 ## 5. Boîtier
 
 - Le back parle au boîtier en termes d'**intentions** (« allumer la LED 3 en rouge », « le bouton 5 a été pressé »), jamais en messages bruts.
-- Pour l'instant, le boîtier est **simulé** : une page web du dossier `simulateur/`, servie par le back sur `/simulateur`. Le format d'échange du vrai boîtier sera branché plus tard sur les mêmes intentions.
+- Pour l'instant, le boîtier est **simulé** : le dossier `simulateur/`, servi par le back sur `/simulateur`. Le format d'échange du vrai boîtier sera branché plus tard sur les mêmes intentions.
+- Le simulateur existe sous deux formes, avec le même code :
+  - une **page seule**, `/simulateur` ;
+  - un **boîtier virtuel dans le jeu** : `front/src/index.html` charge `/simulateur/widget.js`, qui ajoute une icône en haut à droite. Un clic déplie le boîtier par-dessus le jeu. Il sert aussi de **secours à l'exposition** si le vrai boîtier tombe en panne.
+- **Ctrl + Maj + S** affiche ou cache l'icône du boîtier virtuel, sans toucher au code. Cachée, elle est éteinte : pas de connexion au back, et les chiffres du clavier ne font rien.
+- `/simulateur/reglages.json` donne les réglages par défaut : `{ "visible_par_defaut": ..., "outils_de_test": ... }`. Les deux valent `true` en développement (variable d'environnement `ESCAPE_DEV=1`, mise par `dev.bat`) et `false` sinon. Hors développement, le back ignore aussi les messages `test`.
 - Le boîtier se connecte au WebSocket `/ws/boitier`. Sa connexion et sa déconnexion déclenchent `boitier_reconnecte` et `boitier_deconnecte` côté écrans.
 
 Messages du back vers le boîtier :
