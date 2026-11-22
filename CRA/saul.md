@@ -28,5 +28,5 @@ Réalisation avec Nicolas d'un document rassemblant l'ensemble des énigmes, ét
 J'ai commencé à étudier comment faire en sorte que le microcontrôleur et l'ordinateur communique entre eux de façon stable, j'ai pour l'instant 3 pistes principales : 
 - mettre la logique côté microcontrôleur + pc qui peux envoyer également un raccourci clavier sur une pression de touche, avec donc une logique pc qui récupère la touche pressé et qui fait l'affichage sur l'écran + le micro contrôleur qui exécute la même logique et qui calcule son résultat de son côté aussi.
 - mettre la logique uniquement sur le microcontrôleur et il renvoie à la fin si l'énigme est un succès ou non.
-- mettre la logique uniquement sur le pc et le pc envoie sur le microcontrôleur les leds à allumer.
-Pour l'instant je ne sais pas encore 
+- mettre la logique uniquement sur le pc et le pc envoie sur le microcontrôleur les leds à allumer.\
+Pour l'instant je ne sais pas encore lequel choisir, ou peut-être les mixer. je verrais.
