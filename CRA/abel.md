@@ -30,3 +30,11 @@ j'ai aussi pu creer faire un sorte que le front fasse des requete au back, back 
 **Semaine du 2 au 8 novembre : pause**
 
 étant en semaine de dst je n'ai malheureusement pas tellement pu avancé sur le projet
+
+**Semaine du 9 au 15 novembre : pause**
+
+nous avons a décider du contenu des salle, et des divers enigmes
+
+**Semaine du 16 au 22 novembre : pause**
+
+nous avons fini de décider du contenu des salles et avons organiser le travaille pour créer le prototype pour fin novembre
