@@ -7,10 +7,10 @@ import { Partie, SallePublique } from './models';
 export class ApiService {
   private http = inject(HttpClient);
 
-  async getSalles(): Promise<SallePublique[]> {
-    const r = await firstValueFrom(this.http.get<any>('/api/salles'));
-    return Array.isArray(r) ? r : r.salles;   // forme exacte à confirmer avec le back
-  }
+  getSalles(): Promise<SallePublique[]> {
+  return firstValueFrom(this.http.get<SallePublique[]>('/api/salles'))
+    .then(s => [...s].sort((a, b) => a.etage - b.etage));
+}
 
   getPartie()      { return firstValueFrom(this.http.get<Partie>('/api/partie')); }
   nouvellePartie() { return firstValueFrom(this.http.post<Partie>('/api/partie', {})); }

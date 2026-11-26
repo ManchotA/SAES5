@@ -11,13 +11,20 @@ export class RoomScene extends Phaser.Scene {
   private panneau!: Phaser.GameObjects.Rectangle;
   private porte!: Phaser.GameObjects.Rectangle;
   private chrono!: Phaser.GameObjects.Text;
+  private progression!: Phaser.GameObjects.Text;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private touchE!: Phaser.Input.Keyboard.Key;
   private abonnement?: Subscription;
   private finie = false;
+  private nettoye = false;
 
   constructor() { super('Room'); }
-  init(data: { roomId: string }) { this.roomId = data.roomId; }
+
+  init(data: { roomId: string }) {
+    this.roomId = data.roomId;
+    this.finie = false;      // la même instance de scène est réutilisée à chaque changement de salle
+    this.nettoye = false;
+  }
 
   create() {
     this.partie = this.registry.get('partie');
@@ -39,34 +46,43 @@ export class RoomScene extends Phaser.Scene {
 
     this.panneau = this.add.rectangle(480, 480, 40, 70, 0x3388ff);
     this.porte = this.add.rectangle(880, 470, 50, 100, 0x884422);
+    this.progression = this.add.text(this.panneau.x, this.panneau.y - 60, '',
+      { fontSize: '14px', color: '#fff' }).setOrigin(0.5);
 
     this.cursors = this.input.keyboard!.createCursorKeys();
     this.touchE = this.input.keyboard!.addKey('E');
 
     this.majPorte();
+    this.majProgression();
+
     this.abonnement = this.partie.evenements$.subscribe(ev => {
+      this.majProgression();
       if (ev.type === 'enigme_resolue' && ev.salle === this.roomId) this.majPorte();
       if (ev.type === 'partie_terminee') this.afficherFin(ev.partie.statut);
     });
-    this.events.once('shutdown', () => this.abonnement?.unsubscribe());
+
+    // Quitter la salle : changement de salle (shutdown) ou fermeture du jeu (destroy)
+    this.events.once('shutdown', () => this.nettoyer());
+    this.events.once('destroy', () => this.nettoyer());
   }
 
   override update() {
     if (this.finie) return;
+
     const body = this.player.body as Phaser.Physics.Arcade.Body;
     body.setVelocityX(this.cursors.left.isDown ? -180 : this.cursors.right.isDown ? 180 : 0);
     if (this.cursors.up.isDown && body.blocked.down) body.setVelocityY(-450);
 
     if (Phaser.Input.Keyboard.JustDown(this.touchE)) {
-  const resolue = this.partie.partie()?.salles_resolues.includes(this.roomId);
+      const resolue = this.partie.partie()?.salles_resolues.includes(this.roomId);
 
-  if (Math.abs(this.player.x - this.panneau.x) < 50) {
-    this.partie.lancerEnigme(this.roomId)
-      .catch(e => console.warn(e.error?.erreur ?? e));
-    } else if (resolue && Math.abs(this.player.x - this.porte.x) < 60) {
-      this.salleSuivante();
+      if (Math.abs(this.player.x - this.panneau.x) < 50) {
+        this.partie.lancerEnigme(this.roomId)
+          .catch(e => console.warn(e.error?.erreur ?? e));
+      } else if (resolue && Math.abs(this.player.x - this.porte.x) < 60) {
+        this.salleSuivante();
+      }
     }
-  }
 
     // Chrono : recalculé à chaque image depuis fin_a, comme le prévoit le contrat
     const fin = this.partie.partie()?.fin_a;
@@ -76,9 +92,28 @@ export class RoomScene extends Phaser.Scene {
     }
   }
 
+  private nettoyer() {
+    if (this.nettoye) return;
+    this.nettoye = true;
+    this.abonnement?.unsubscribe();
+
+    const p = this.partie.partie();
+    if (p?.enigme_en_cours === this.roomId && !p.salles_resolues.includes(this.roomId)) {
+      this.partie.annulerEnigme(this.roomId).catch(() => {});   // éteint les LEDs
+    }
+  }
+
   private majPorte() {
     const resolue = this.partie.partie()?.salles_resolues.includes(this.roomId);
     this.porte.setFillStyle(resolue ? 0x44aa44 : 0x884422);   // vert = ouverte
+  }
+
+  private majProgression() {
+    const p = this.partie.partie();
+    const etat = p?.enigme_en_cours === this.roomId ? p.enigme_etat : null;
+    this.progression.setText(etat
+      ? `Étape ${Math.min(etat.etapes_reussies + 1, etat.nb_etapes)}/${etat.nb_etapes} · ${etat.longueur_etape} couleurs`
+      : '');
   }
 
   private salleSuivante() {
@@ -91,15 +126,16 @@ export class RoomScene extends Phaser.Scene {
       this.scene.start('Room', { roomId: suivante.id });
     }
   }
-private afficherFin(statut: string) {
-  this.finie = true;
-  this.physics.pause();
-  this.add.rectangle(480, 270, 960, 540, 0x000000, 0.75).setDepth(10);
-  this.add.text(480, 220, statut === 'gagnee' ? 'Victoire !' : 'Temps écoulé',
-    { fontSize: '48px', color: '#fff' }).setOrigin(0.5).setDepth(11);
-  this.add.text(480, 320, 'Retour au menu', { fontSize: '24px', color: '#ff0' })
-    .setOrigin(0.5).setDepth(11)
-    .setInteractive({ useHandCursor: true })
-    .on('pointerdown', () => (this.registry.get('retourMenu') as () => void)());
-}
+
+  private afficherFin(statut: string) {
+    this.finie = true;
+    this.physics.pause();
+    this.add.rectangle(480, 270, 960, 540, 0x000000, 0.75).setDepth(10);
+    this.add.text(480, 220, statut === 'gagnee' ? 'Victoire !' : 'Temps écoulé',
+      { fontSize: '48px', color: '#fff' }).setOrigin(0.5).setDepth(11);
+    this.add.text(480, 320, 'Retour au menu', { fontSize: '24px', color: '#ff0' })
+      .setOrigin(0.5).setDepth(11)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', () => (this.registry.get('retourMenu') as () => void)());
+  }
 }
